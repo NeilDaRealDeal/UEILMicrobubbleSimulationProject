@@ -149,111 +149,134 @@ input_args = {...
     'DisplayMask', 'off'};
 
 % run code
-switch model
-    case 1
-        
-        % MATLAB CPU
-        sensor_data = kspaceFirstOrder3D(kgrid, medium, source, sensor, ...
-            input_args{:}, ...
-            'DataCast', 'single', ...
-            'PlotScale', [-1, 1] * source_amp);
-        
-    case 2
-        
-        % MATLAB GPU
-        sensor_data = kspaceFirstOrder3D(kgrid, medium, source, sensor, ...
-            input_args{:}, ...
-            'DataCast', 'gpuArray-single', ...
-            'PlotScale', [-1, 1] * source_amp);
-        
-    case 3
-        
-        % C++
-        sensor_data = kspaceFirstOrder3DC(kgrid, medium, source, sensor, input_args{:});
-        
-    case 4
-        
-        % C++/CUDA GPU
-        sensor_data = kspaceFirstOrder3DG(kgrid, medium, source, sensor, input_args{:});
-        
-end
-
-% extract amplitude from the sensor data
-amp = extractAmpPhase(sensor_data.p, 1/kgrid.dt, source_f0, ...
-    'Dim', 2, 'Window', 'Rectangular', 'FFTPadding', 1);
-
-% reshape data
-amp = reshape(amp, Nx - source_x_offset - 1, Ny);
-
-% extract pressure on axis
-amp_on_axis = amp(:, Ny/2 + 1);
-
-% define axis vectors for plotting
-x_vec = kgrid.x_vec(source_x_offset + 2:end, :) - kgrid.x_vec(source_x_offset + 1);
-y_vec = kgrid.y_vec;
-
-% =========================================================================
-% ANALYTICAL SOLUTION
-% =========================================================================
-
-% calculate the wavenumber
-k = 2 * pi * source_f0 ./ c0;
-
-% define radius and axis
-x_max = (Nx * dx);
-x_ref = 0:x_max/10000:x_max;
-
-% calculate analytical solution
-p_ref_axial = focusedBowlONeil(source_roc, source_diameter, source_amp / (c0 * rho0), source_f0, c0, rho0, x_ref, []);
-
-% calculate analytical solution at exactly the same points as k-Wave
-p_ref_axial_kw = focusedBowlONeil(source_roc, source_diameter, source_amp / (c0 * rho0), source_f0, c0, rho0, x_vec, []);
-
-% calculate error
-L2_error = 100 * sqrt( sum( (p_ref_axial_kw(:) - amp_on_axis(:)).^2 ) / sum( p_ref_axial_kw(:).^2 ) );
-Linf_error = 100 * max(abs(p_ref_axial_kw(:) - amp_on_axis(:))) / max(p_ref_axial_kw(:));
-
-% =========================================================================
-% VISUALISATION
-% =========================================================================
-
-% plot the pressure along the focal axis of the piston
-figure;
-plot(1e3 * x_ref, 1e-6 * p_ref_axial, 'k-');
-hold on;
-plot(1e3 * x_vec, 1e-6 * amp_on_axis, 'b.');
-hold off;
-set(gca, 'XLim', [0, axial_size] * 1e3);
-xlabel('Axial Position [mm]');
-ylabel('Pressure [MPa]');
-legend('Exact', 'k-Wave', 'Location', 'Best');
-title('Axial Pressure');
-
-% plot the source mask (pml is outside the grid in this example)
-figure;
-subplot(1, 2, 1);
-imagesc(1e3 * kgrid.y_vec, 1e3 * kgrid.x_vec, source.p_mask(:, :, ceil(Nz/2)));
-xlabel('y [mm]');
-ylabel('x [mm]');
-axis image;
-title('Source Mask');
-
-grid_weights = karray.getArrayGridWeights(kgrid);
-subplot(1, 2, 2);
-imagesc(1e3 * kgrid.y_vec, 1e3 * kgrid.x_vec, grid_weights(:, :, ceil(Nz/2)));
-axis image;
-xlabel('y [mm]');
-ylabel('x [mm]');
-title('Off-Grid Source Weights');
-
-% plot the pressure field 
-figure;
-imagesc(1e3 * y_vec, 1e3 * x_vec, amp);
-xlabel('Lateral Position [mm]');
-ylabel('Axial Position [mm]');
-axis image;
-title('Pressure Field');
+% switch model
+%     case 1
+% 
+%         % MATLAB CPU
+%         sensor_data = kspaceFirstOrder3D(kgrid, medium, source, sensor, ...
+%             input_args{:}, ...
+%             'DataCast', 'single', ...
+%             'PlotScale', [-1, 1] * source_amp);
+% 
+%     case 2
+% 
+%         % MATLAB GPU
+%         sensor_data = kspaceFirstOrder3D(kgrid, medium, source, sensor, ...
+%             input_args{:}, ...
+%             'DataCast', 'gpuArray-single', ...
+%             'PlotScale', [-1, 1] * source_amp);
+% 
+%     case 3
+% 
+%         % C++
+%         sensor_data = kspaceFirstOrder3DC(kgrid, medium, source, sensor, input_args{:});
+% 
+%     case 4
+% 
+%         % C++/CUDA GPU
+%         sensor_data = kspaceFirstOrder3DG(kgrid, medium, source, sensor, input_args{:});
+% 
+% end
+% 
+% % extract amplitude from the sensor data
+% amp = extractAmpPhase(sensor_data.p, 1/kgrid.dt, source_f0, ...
+%     'Dim', 2, 'Window', 'Rectangular', 'FFTPadding', 1);
+% 
+% % reshape data
+% amp = reshape(amp, Nx - source_x_offset - 1, Ny);
+% 
+% % extract pressure on axis
+% amp_on_axis = amp(:, Ny/2 + 1);
+% 
+% % define axis vectors for plotting
+% x_vec = kgrid.x_vec(source_x_offset + 2:end, :) - kgrid.x_vec(source_x_offset + 1);
+% y_vec = kgrid.y_vec;
+% 
+% % =========================================================================
+% % ANALYTICAL SOLUTION
+% % =========================================================================
+% 
+% % calculate the wavenumber
+% k = 2 * pi * source_f0 ./ c0;
+% 
+% % define radius and axis
+% x_max = (Nx * dx);
+% x_ref = 0:x_max/10000:x_max;
+% 
+% % calculate analytical solution
+% p_ref_axial = focusedBowlONeil(source_roc, source_diameter, source_amp / (c0 * rho0), source_f0, c0, rho0, x_ref, []);
+% 
+% % calculate analytical solution at exactly the same points as k-Wave
+% p_ref_axial_kw = focusedBowlONeil(source_roc, source_diameter, source_amp / (c0 * rho0), source_f0, c0, rho0, x_vec, []);
+% 
+% % calculate error
+% L2_error = 100 * sqrt( sum( (p_ref_axial_kw(:) - amp_on_axis(:)).^2 ) / sum( p_ref_axial_kw(:).^2 ) );
+% Linf_error = 100 * max(abs(p_ref_axial_kw(:) - amp_on_axis(:))) / max(p_ref_axial_kw(:));
+% 
+% % =========================================================================
+% % VISUALISATION
+% % =========================================================================
+% 
+% % plot the pressure along the focal axis of the piston
+% figure;
+% plot(1e3 * x_ref, 1e-6 * p_ref_axial, 'k-');
+% hold on;
+% plot(1e3 * x_vec, 1e-6 * amp_on_axis, 'b.');
+% hold off;
+% set(gca, 'XLim', [0, axial_size] * 1e3);
+% xlabel('Axial Position [mm]');
+% ylabel('Pressure [MPa]');
+% legend('Exact', 'k-Wave', 'Location', 'Best');
+% title('Axial Pressure');
+% 
+% % plot the source mask (pml is outside the grid in this example)
+% figure;
+% subplot(1, 2, 1);
+% imagesc(1e3 * kgrid.y_vec, 1e3 * kgrid.x_vec, source.p_mask(:, :, ceil(Nz/2)));
+% xlabel('y [mm]');
+% ylabel('x [mm]');
+% axis image;
+% title('Source Mask');
+% 
+% grid_weights = karray.getArrayGridWeights(kgrid);
+% subplot(1, 2, 2);
+% imagesc(1e3 * kgrid.y_vec, 1e3 * kgrid.x_vec, grid_weights(:, :, ceil(Nz/2)));
+% axis image;
+% xlabel('y [mm]');
+% ylabel('x [mm]');
+% title('Off-Grid Source Weights');
+% 
+% % plot the pressure field 
+% figure;
+% imagesc(1e3 * y_vec, 1e3 * x_vec, amp);
+% xlabel('Lateral Position [mm]');
+% ylabel('Axial Position [mm]');
+% axis image;
+% title('Pressure Field');
 
 sim = SingleCavitationSimulation;
-sim.microbubble_position_x = 40e-3;
-sim.microbubble_position_y = 0l
+sim.microbubble_location_x = 100;
+sim.microbubble_location_y = 40;
+sim.microbubble_location_z = 40;
+sim.microbubble_true_location_x = kgrid.x(sim.microbubble_location_x, sim.microbubble_location_y, sim.microbubble_location_z);
+sim.microbubble_true_location_y = kgrid.y(sim.microbubble_location_x, sim.microbubble_location_y, sim.microbubble_location_z);
+sim.microbubble_true_location_z = kgrid.z(sim.microbubble_location_x, sim.microbubble_location_y, sim.microbubble_location_z);
+sim.gas_model = 'adiabatic';
+sim.radius = '1.5';
+sim.thickness = '0.3';
+sim.shear = '20';
+sim.viscocity = '0.6';
+sim.liquid_name = 'blood';
+sim.kgrid = kgrid;
+sim.medium = medium;
+sim.true_kwavearray = karray;
+sim.true_source_signal = source_sig;
+sim.true_sensor = sensor;
+sim.input_args = input_args;
+sim.deltax = 0.5e-7;
+sim.n = 8;
+sim.artificial_scale_up = 1e6;
+sim.ts = source;
+sensor_data = SingleCavitationSimulation.run(sim);
+
+%Fix cycles/frequency length count and try

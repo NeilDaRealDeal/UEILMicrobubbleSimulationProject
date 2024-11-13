@@ -148,7 +148,7 @@ input_args = {...
     'PlotPML', false, ...
     'DisplayMask', 'off'};
 
-% % run code
+% run code
 % switch model
 %     case 1
 % 
@@ -275,5 +275,8 @@ sim.true_sensor = sensor;
 sim.input_args = input_args;
 sim.deltax = 0.5e-7;
 sim.n = 8;
-sim.artificial_scale_up = 1e6;
+sim.artificial_scale_up = 1e7;
+sim.ts = source;
 sensor_data = SingleCavitationSimulation.run(sim);
+
+%Fix cycles/frequency length count and try
