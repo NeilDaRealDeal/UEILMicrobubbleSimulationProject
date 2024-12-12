@@ -119,5 +119,3 @@ BS_WriteMessage(sprintf('Finished. Results saved to file %s', graph.resultfile) 
 
 return
 
-
-

@@ -1,0 +1,33 @@
+%Start Path in Project Folder
+
+%Bubblesim
+addpath('C:\Users\neils\OneDrive\Desktop\bubblesim-main\bubblesim-main')
+addpath('C:\Users\neils\OneDrive\Desktop\bubblesim-main\bubblesim-main\Bubblesim')
+addpath('C:\Users\neils\OneDrive\Desktop\bubblesim-main\bubblesim-main\Bubblesim\Reorganize')
+addpath('C:\Users\neils\OneDrive\Desktop\bubblesim-main\bubblesim-main\Bubblesim\Utilities')
+addpath('C:\Users\neils\OneDrive\Desktop\bubblesim-main\bubblesim-main\Bubblesim\ODE')
+%K-wave
+% addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\k-wave-toolbox-version-1.3\k-Wave')
+% addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\k-wave-toolbox-version-1.3\k-Wave\binaries')
+% addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\k-wave-toolbox-version-1.3\k-Wave\examples')
+% addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\k-wave-toolbox-version-1.3\k-Wave\examples')
+% addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\k-wave-toolbox-version-1.3\k-Wave\helpfiles')
+% addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\k-wave-toolbox-version-1.3\k-Wave\license')
+%Proteus
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\acoustic-module')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\delay-and-sum')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\documentation')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\example_custom_data')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\example_scripts')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\geometry_data')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\GUIfunctions')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\geometry_data\renal_tree')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\geometry_data\mouse_brain')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\geometry_data\vtkToolbox')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\mesh-voxelisation')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\mesh-voxelisation\Mesh_voxelisation')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\microbubble-simulator')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\streamline-module')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\microbubble-simulator\functions')
+addpath('C:\Users\neils\OneDrive\Desktop\PROTEUS-main\time-estimation')

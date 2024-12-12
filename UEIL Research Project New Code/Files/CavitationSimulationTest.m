@@ -120,9 +120,18 @@ source.p = karray.getDistributedSourceSignal(kgrid, source_sig);
 % --------------------
 
 % assign medium properties
-medium.sound_speed = c0;
-medium.density = rho0;
-
+medium.sound_speed = c0 * ones(Nx, Ny, Nz);
+medium.density = rho0 * ones(Nx, Ny, Nz);
+for x = 1:Nx
+    for y = 1:Ny
+        for z = 1:Nz
+            if ((x - 100)*(x-100) + (y - 40)*(y-40) + (z-40)*(z-40) < 100 && (x - 100)*(x-100) + (y - 40)*(y-40) + (z-40)*(z-40) > 25)
+                medium.sound_speed(x:(x+1), y:(y+1), z:(z+1)) = 1500;
+                medium.density(x:(x+1), y:(y+1), z:(z+1)) = 1000;
+            end
+        end
+    end
+end
 % --------------------
 % SENSOR
 % --------------------
@@ -274,9 +283,13 @@ sim.true_source_signal = source_sig;
 sim.true_sensor = sensor;
 sim.input_args = input_args;
 sim.deltax = 0.5e-7;
-sim.n = 8;
-sim.artificial_scale_up = 1e6;
+sim.n = 1;
+sim.true_source = source;
+sim.artificial_scale_up = 1e10;
 sim.ts = source;
-sensor_data = SingleCavitationSimulation.run(sim);
+sim.source_amp = 1e6;
+
+the_data = SingleCavitationSimulation.run(sim);
+save('the_data.mat', 'the_data')
 
 %Fix cycles/frequency length count and try
