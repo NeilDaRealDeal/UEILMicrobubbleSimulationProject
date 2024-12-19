@@ -9,7 +9,6 @@
 %  - <FaH>
 % Note: Don't Forget to Employ Iteration
 % Note: Emissions are in the form of time vs. index (of microbubble or of cube)
-% Note: After coding this class, code the example (based off of the bowl trasnducer k-wave example)
 
 
 classdef CavitationSimulation
@@ -76,7 +75,7 @@ classdef CavitationSimulation
        function source = calculate_source_from_microbubble_emissions(obj, microbubble_emissions)
            source = 0;
        end
-       function data = iteration(obj, input_data) %input data is cubical emissions, output is cubical emissions after smoothing, calculating analytical (from microbubble to cube), calculating source with spheres, calculating k-wave, subtracting without boundary, and recalculating cubical_emissions from recieved
+       function data = iteration(obj, input_data) %input data is cubical emissions, output is cubical emissions after smoothing, calculating analytical (from m), calculating source with spheres, calculating k-wave, subtracting without boundary, and recalculating cubical_emissions from recieved
            data = 0;
        end
        function data = last_iteration(obj, input_data) %only difference is that the last one sets the emissions, calculated the radii, and sets the radii

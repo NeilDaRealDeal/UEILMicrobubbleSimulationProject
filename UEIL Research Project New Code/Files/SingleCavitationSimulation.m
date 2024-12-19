@@ -74,10 +74,10 @@ classdef SingleCavitationSimulation
           %ave('test_sim_source_signal.mat', 'sim_source_signal')
           sourc.p_mask = sim_kwavearray.getArrayBinaryMask(obj.kgrid);
           sourc.p = sim_kwavearray.getDistributedSourceSignal(obj.kgrid, sim_source_signal);
-          save('test_sim_kwavearray.mat', 'sim_kwavearray')
+          %save('test_sim_kwavearray.mat', 'sim_kwavearray')
           sour.p_mask = sourc.p_mask;
           sour.p = sourc.p;
-          save('test_sourc.mat', 'sourc')
+          %save('test_sourc.mat', 'sourc')
       end
       function n = get_ind(x, y, z, Nx, Ny)
           n = x + (y-1)*Nx + (z-1)*Nx*Ny;
@@ -132,16 +132,16 @@ classdef SingleCavitationSimulation
           disp(size(driven));
           %disp("Driven:");
           %disp(driven);
-          save('test_driven.mat', 'driven')
+          %save('test_driven.mat', 'driven')
           %disp(size(time));
           %disp("Time");
           %disp(time);
-          save('test_time.mat', 'time')
+          %save('test_time.mat', 'time')
           [particle2,pulse2,linear2,simulation2,graph2] = UEILFotisNeilBubblesimCallBackCustomPulse(obj.gas_model, obj.radius, obj.thickness, obj.shear, obj.viscocity, obj.liquid_name, '30', '2.5', '10', '10', time.', driven.');
           scattered = simulation2.pr * obj.artificial_scale_up;
           %disp("scattered:")
           %disp(scattered);
-          save('test_scattered.mat', 'scattered')
+          %save('test_scattered.mat', 'scattered')
       end
       function emitted = convert_scattered_to_emitted(obj, scattered) %output emitted (just processing)
           emitted_from_microbubble = scattered.'/obj.n;
@@ -161,7 +161,7 @@ classdef SingleCavitationSimulation
 
       function sensor_data = run_true_sim(obj, sensed) %Output true sensor data
           bubble_emission = SingleCavitationSimulation.convert_scattered_to_emitted(obj, SingleCavitationSimulation.convert_driven_to_scattered(obj, SingleCavitationSimulation.convert_sensed_to_driven(obj, sensed)));
-          save('test_emission.mat', 'bubble_emission')
+          %save('test_emission.mat', 'bubble_emission')
           sim_source = SingleCavitationSimulation.set_up_sim_source_smart(obj, bubble_emission);
           disp("sim_source")
           [data] = kspaceFirstOrder3D(obj.kgrid, obj.medium, sim_source, obj.true_sensor, obj.input_args{:}, ...

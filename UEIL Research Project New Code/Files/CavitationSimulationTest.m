@@ -126,8 +126,8 @@ for x = 1:Nx
     for y = 1:Ny
         for z = 1:Nz
             if ((x - 100)*(x-100) + (y - 40)*(y-40) + (z-40)*(z-40) < 100 && (x - 100)*(x-100) + (y - 40)*(y-40) + (z-40)*(z-40) > 25)
-                medium.sound_speed(x:(x+1), y:(y+1), z:(z+1)) = 1500;
-                medium.density(x:(x+1), y:(y+1), z:(z+1)) = 1000;
+                medium.sound_speed(x:(x+1), y:(y+1), z:(z+1)) = c0*1;
+                medium.density(x:(x+1), y:(y+1), z:(z+1)) = rho0*1;
             end
         end
     end
@@ -285,7 +285,7 @@ sim.input_args = input_args;
 sim.deltax = 0.5e-7;
 sim.n = 1;
 sim.true_source = source;
-sim.artificial_scale_up = 1e10;
+sim.artificial_scale_up = 1e9;
 sim.ts = source;
 sim.source_amp = 1e6;
 
