@@ -69,13 +69,13 @@ switch action
   pulse(1).fs      = Mega*str2num( sampling_rate );
   pulse(1).invert  = false;
 
-  simulation.displayprogress= true;  
-  graph.plotlinear          = true; 
-  graph.include(1) = true;
-  graph.include(2) = true;
-  graph.include(3) = true;
+  simulation.displayprogress= false;  
+  graph.plotlinear          = false; 
+  graph.include(1) = false;
+  graph.include(2) = false;
+  graph.include(3) = false;
   graph.include(4) = false;
-  graph.include(5) = true;
+  graph.include(5) = false;
   graph.include(6) = false;
   
   % for k=1:length(input.plot)

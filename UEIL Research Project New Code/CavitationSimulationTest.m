@@ -34,7 +34,7 @@ clearvars;
 %   2: MATLAB GPU code
 %   3: C++ code
 %   4: CUDA code
-model           = 1;
+model           = 2;
 
 % medium parameters
 c0              = 1500;     % sound speed [m/s]
@@ -272,7 +272,7 @@ sim.microbubble_true_location_y = kgrid.y(sim.microbubble_location_x, sim.microb
 sim.microbubble_true_location_z = kgrid.z(sim.microbubble_location_x, sim.microbubble_location_y, sim.microbubble_location_z);
 sim.gas_model = 'adiabatic';
 sim.radius = '1.5';
-sim.thickness = '0.3';
+sim.thickness = '3';
 sim.shear = '20';
 sim.viscocity = '0.6';
 sim.liquid_name = 'blood';

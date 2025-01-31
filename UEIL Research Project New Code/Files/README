@@ -1,3 +1,0 @@
-To run: after setting up the paths accordingly (not using addpaths), run the CavitationSimulationTest file, which mainly references the SingleCavitationSimulation class.
-Currently, this will run the base-case simulation for only one microbubble.
-When the CavitationSimulation class is completed (general case, rather than only 1 microbubble), CavitationSimulationTest will be updated accordingly...

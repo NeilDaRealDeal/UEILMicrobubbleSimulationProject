@@ -1,4 +1,3 @@
-%For now just try custom amplitude but don't try the file stuff... try and
 %overrule
 
 function [particle,pulse,linear,simulation,graph]=UEILFotisNeilBubblesimCallBackCustomPulse(gas_model, radius, thickness, shear, viscocity, liquid_name, amplitude, cycles, frequency, sampling_rate, t, p)
@@ -46,6 +45,7 @@ BS_WriteMessage('Reading input parameters')
 [particle,pulse,simulation,graph]= ...
           UEILFotisNeilBubblesimFromBatch(gas_model, radius, thickness, shear, viscocity, liquid_name, amplitude, cycles, frequency, sampling_rate, particle,pulse,simulation,graph,'read');
 
+%Potentially remove while keeping graph stuff (maybe just alter file)
 BS_WriteMessage('Defining input pulse')
 [particle, pulse, graph]= BS_DefinePulse(particle,pulse,graph);
 
@@ -62,29 +62,33 @@ graph = BS_DefineGraphs(graph);
 %[particle,pulse,simulation,graph]= ...
           %UEILFotisNeilBubblesimFromBatch(gas_model, radius, thickness, shear, viscocity, liquid_name, amplitude, cycles, frequency, sampling_rate, particle,pulse,simulation,graph,'write');
 
-BS_WriteMessage('Calculating linear results ')
-[linear]= BS_LinearOscillation (particle, pulse(1).t, pulse(1).p );
 
-BS_WriteMessage('Plotting input pulses')
-BS_PlotInitialPulses ( particle, pulse, linear, graph ); %Double Check, Not Essential For Now
+% COMMENTED OUT 1.7.2025
+% BS_WriteMessage('Calculating linear results ')
+% [linear]= BS_LinearOscillation (particle, pulse(1).t, pulse(1).p );
+% BS_WriteMessage('Plotting input pulses')
+% BS_PlotInitialPulses ( particle, pulse, linear, graph ); %Double Check, Not Essential For Now
+[linear] = [];
 
 set (graph.figure, 'Name', sprintf('Results  %s' , graph.title) );
 
 BS_WriteMessage('Input pulses ready')
-drawnow
-
+% COMMENTED OUT 1.7.2025
+%drawnow
 return
 
 
-%=== SIMULATE BUBBLE OSCILLATION ===========================
+%=== SIMULATE BUBBLE OSCILLATION =========================== MAJORITY OF
+%TIME COMES FROM HERE (or rather, the method calls within)
 function [particle, pulse, linear, simulation, graph] = ...
    BS_SimulateResult(particle,pulse,linear,simulation,graph);
-
+tic
 MessageWindow= gcf;
-set (MessageWindow, 'Pointer', 'Watch'); % Display waiting indicator
-drawnow;
+%set (MessageWindow, 'Pointer', 'Watch'); % Display waiting indicator
+%drawnow;
 
 %=== Simulate response =====================================
+
 if (pulse(1).invert)
   N=2;
   simulation(2)=simulation(1);
@@ -95,8 +99,10 @@ end
 for k=1:N
   tic
   BS_WriteMessage(sprintf('Simulating ODE numerically. Pulse %d', k) );
+  %ALTER THESE 2 FUNCTIONS TO ACCOUNT FOR MATRIX pulse(1).p
   [t, a, ps]= BS_SimulateOscillation (particle, pulse(k), simulation(k) ); %Check this, Important
-  [tr,pr,fs]= BS_ConstantSampleRate( t, ps, pulse(k).fs ); %Check this, Important
+  %Loop Here
+  [tr,pr,fs]= UEILFotisNeilBS_ConstantSampleRate( t, ps, pulse(k).fs ); %Check this, Important
 
   simulation(k).t = t;    % [s]    Time vector from ODE solver,  uneven sampling
   simulation(k).a = a;    % [m]    Radius and velocity, uneven sampling
@@ -105,6 +111,8 @@ for k=1:N
   simulation(k).tr= tr;   % [s]    Time vector, resampled to constant rate
   simulation(k).pr= pr;   % [Pa]   Scattered pressure, resampled to constant rate
 
+  %We want to change t, a, pr, and tr
+
   simulation(k).etime = toc;
 end
 
@@ -112,10 +120,10 @@ set (MessageWindow, 'Pointer', 'Arrow'); % Remove waiting indicator
 
 %=== Plot results ==========================================
 BS_WriteMessage('Plotting results')
-BS_PlotSimulation ( particle, pulse, linear, simulation, graph ); %Double check, not essential right now
+%BS_PlotSimulation ( particle, pulse, linear, simulation, graph ); %Double check, not essential right now
 
 save ( graph.resultfile , 'particle', 'pulse', 'simulation' );
 BS_WriteMessage(sprintf('Finished. Results saved to file %s', graph.resultfile) );
-
+toc
 return
 
